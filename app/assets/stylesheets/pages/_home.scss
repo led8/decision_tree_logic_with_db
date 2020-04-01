@@ -1,1 +1,29 @@
-// Specific CSS for your home-page
+body {
+  height: 100vh;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+li {
+  cursor: pointer;
+}
+
+.stepper-container {
+  border: 1px solid lightgrey;
+  height: 10px;
+  border-radius: 25px;
+  padding: 0;
+}
+
+.stepper-progression {
+  height: 100%;
+  width: 0%;
+  background-color: lightgrey;
+  border-radius: 25px;
+}
+
+.stepper-count {
+  font-size: 3rem;
+}
