@@ -1,19 +1,20 @@
-<div class="container">
+
   <div class="jumbotron">
     <div class="question col-6 offset-3 display-4"></div>
 
     <hr class="my-4">
-    <ul class="answers col-6 offset-3 list-group"></ul>
+    <%= form_for @cat, url: update_cat_path(@cat), method: :patch, html: { id: "edit-cat", class: "col-6 offset-3 mt-5 d-flex justify-content-center" } do |f| %>
+      <ul class="answers col-12 list-group"></ul>
+    <% end %>
 
     <div class="col-6 offset-3 mt-5 d-flex justify-content-between">
       <button onclick="prev()" type="button" class="prev btn btn-primary">previous</button>
       <button onclick="next()" type="button" class="next btn btn-success">next</button>
     </div>
 
-    <div class="stepper-container col-6 offset-3 mt-5">
+<!--     <div class="stepper-container col-6 offset-3 mt-5">
       <div class="stepper-progression"></div>
     </div>
-    <div class="stepper-count col-6 offset-3 mt-5 d-flex justify-content-center">0</div>
+    <div class="stepper-count col-6 offset-3 mt-5 d-flex justify-content-center">0</div> -->
 
   </div>
-</div>

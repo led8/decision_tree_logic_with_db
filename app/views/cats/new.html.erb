@@ -1,9 +1,12 @@
-<div class="container">
+<div class="container" id="ajax-form">
   <div class="jumbotron">
+  <h1 class="col-9 offset-3 display-4">CREATE YOUR CAT</h1>
 
-    <button type="button" class="btn btn-primary col-6 offset-3 mt-5 d-flex justify-content-between">
-      <%= link_to "custom a cat", new_cat_path, class: "text-decoration-none text-white m-auto" %>
-    </button>
+    <%= form_for @cat, url: create_cat_path, method: :post, html: { id: "new-cat", class: "col-6 offset-3 mt-5 d-flex justify-content-center" } do |f| %>
+      <%= f.hidden_field :init, value: true %>
+      <%= f.submit "create a cat", class: "btn-primary p-2" %>
+    <% end %>
+
     </div>
   </div>
 </div>

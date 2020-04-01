@@ -29,7 +29,7 @@ class CatsController < ApplicationController
   private
 
   def strong_params
-    params.require(:cat).permit(:name, :size, :age, :gender, :color, :gift)
+    params.require(:cat).permit(:init, :name, :size, :age, :gender, :color, :gift)
   end
 
   def find_cat_id
