@@ -22,7 +22,7 @@ class CatsController < ApplicationController
 
   def update
     if @cat.update(strong_params)
-      render :edit
+      render partial: "cats/partials/ajax_edit"
     end
   end
 
