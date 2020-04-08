@@ -1,11 +1,4 @@
-  var form = $('#new-cat');
-  var url = $(form).attr('action');
-  var method = $(form).attr('method');
-  var button = $(form).find('input[type="submit"]');
-  var div_to_replace = $('#ajax-form');
 
-  var question_div = $('.question');
-  var answers_ul = $('.answers');
   var answers_html = "";
   var answers = [];
   var answer = "";
@@ -20,11 +13,9 @@
   var selected_index_to_next = null;
   var selected_index_to_prev = null;
   var stepper_width = '';
-  var stepper_progression = $('.stepper-progression');
-  var stepper_count = $('.stepper-count');
   var answered = false;
   var input_params = {};
 
-  // LAST STEP BUT NOT LEAST
+  // LAST STEP BUT NOT LAST
   var number_of_prev_click;
 

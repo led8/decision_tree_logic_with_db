@@ -2,14 +2,19 @@
 // = require decision_tree_logic/variables
 // = require decision_tree_logic/questions
 
-// Function called first when Object is instanced (create)
+// Function called first when Object is created (create)
 function start() {
-  $(button).on('click', function(event) {
+  var start_form = $('#new-cat');
+  var start_url = $(start_form).attr('action');
+  var start_method = $(start_form).attr('method');
+  var start_button = $(start_form).find('input[type="submit"]');
+
+  $(start_button).on('click', function(event) {
     event.preventDefault();
 
-    $.ajax({ url: url,
-             type: method,
-             data: $(form).serialize(),
+    $.ajax({ url: start_url,
+             type: start_method,
+             data: $(start_form).serialize(),
              success: function(data) {
               replaceHtml(data);
               displayFirstQuestion();
@@ -23,58 +28,9 @@ function start() {
 
 // Function called when ajax successed
 function replaceHtml(data) {
+  var div_to_replace = $('#ajax-form');
+
   $(div_to_replace).html(data);
-}
-
-// Function called when ajax successed
-function displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered) {
-  var answers_ul = $('.answers');
-
-  if (input_params.type == "text") {
-    answers_html +=
-    `<li onclick="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
-    class="list-group-item">
-      <input type=${input_params.type}
-             name=${input_params.name}
-             id=${input_params.id}
-             placeholder="${input_params.placeholder}"
-      />
-    </li>`
-  } else if (input_params.type == "radio") {
-    answers_html +=
-    `<li onclick="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
-    class="list-group-item">
-      <input type=${input_params.type}
-             name=${input_params.name}
-             id=${input_params.id}
-             value=${asnwer}
-      />
-      <label for=${input_params.id}>${answer}</label>
-    </li>`
-  } else if (input_params.type == "checkbox") {
-    answers_html +=
-    `<li onclick="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
-    class="list-group-item">
-      <input type=${input_params.type}
-             name=${input_params.name}
-             id=${input_params.id}
-      />
-      <label for=${input_params.id}>${answer}</label>
-    </li>`
-  } else {
-    answers_html +=
-    `<li>
-      <select name=${input_params.name} id=${input_params.id}>
-        <option value=${answer}
-        onclick="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
-        class="list-group-item">
-          ${answer}
-        </option>
-      </select>
-    </li>`
-  }
-
-  answers_ul.html(answers_html);
 };
 
 // Function called when ajax successed
@@ -95,51 +51,149 @@ function displayFirstQuestion() {
 
   input_params = hash.questions[start_index][start_index].input_params;
 
-  for (i = 0; i < answers.length; i++) {
-    answer = answers[i][0];
-    next_qst_index = answers[i][1].next_qst;
-    prev_qst_index = answers[i][2].prev_qst;
-    prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered;
-
-    displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered);
-  };
+  displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
 };
 
-// Function is called when user click on next button and submit the updated form
-// function next() {
-//   answers_html = "";
-//   answered = false;
+// Function called when ajax successed
+function displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params) {
+  var answers_ul = $('.answers');
 
-//   next_question.prop("disabled", true);
+  if (input_params.type == "select") {
+    next_qst_index = answers[0][1].next_qst;
+    prev_qst_index = answers[0][2].prev_qst;
+    prev_qst_index_if_not_answered = answers[0][3].prev_qst_if_not_answered;
 
-//   question = hash.questions[selected_index_to_next][selected_index_to_next].question
-//   question_div.html(`<h1>${question}</h1>`);
+    answers_ul.html(`<li><select name=${input_params.name}
+                                 id=${input_params.id}
+                                 onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})">
+                        </select>
+                    </li>`);
 
-//   answers = [...hash.questions[selected_index_to_next][selected_index_to_next].answers,
-//             hash.questions[selected_index_to_next][selected_index_to_next].tree_answer]
-//    answers = answers.filter(function(element){ return element != null })
+    for (i = 0; i < answers.length; i++) {
+      answer = answers[i][0];
+      next_qst_index = answers[i][1].next_qst;
+      prev_qst_index = answers[i][2].prev_qst;
+      prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered;
 
-//   for (i = 0; i < answers.length; i++) {
-//     answer = answers[i][0]
-//     next_qst_index = answers[i][1].next_qst
-//     prev_qst_index = answers[i][2].prev_qst
-//     prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered
+      answers_html +=
+      `<option value=${answer}
+        class="list-group-item">
+          ${answer}
+        </option>
+      `
 
-//     answers_html += `<li
-//                     onclick="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
-//                     class="list-group-item">
-//                       ${answer}
-//                     </li>`
+      $('select').html(answers_html);
+    };
+  }
+  else if (input_params.type == "text") {
 
-//     answers_ul.html(answers_html);
-//   }
+    for (i = 0; i < answers.length; i++) {
+      answer = answers[i][0];
+      next_qst_index = answers[i][1].next_qst;
+      prev_qst_index = answers[i][2].prev_qst;
+      prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered;
 
-//   if (next_qst_index > 0) prev_question.removeClass('hide');
-//   if (selected_index_to_next == hash.questions.length - 1) next_question.addClass('hide');
+      answers_html +=
+      `<li onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
+        class="list-group-item">
+          <input type=${input_params.type}
+                 name=${input_params.name}
+                 id=${input_params.id}
+                 placeholder="${input_params.placeholder}"
+          />
+      </li>`
 
-//   logsFromNext(selected_index_to_next,selected_index_to_prev,selected_index_to_prev_if_not_answered,answered);
-//   stepperProgression(selected_index_to_next, hash.questions.length);
-// };
+      answers_ul.html(answers_html);
+    };
+  }
+  else if (input_params.type == "radio") {
+
+    for (i = 0; i < answers.length; i++) {
+      answer = answers[i][0];
+      next_qst_index = answers[i][1].next_qst;
+      prev_qst_index = answers[i][2].prev_qst;
+      prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered;
+
+      answers_html +=
+      `<li onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
+      class="list-group-item">
+        <input type=${input_params.type}
+               name=${input_params.name}
+               id=${input_params.id}
+               value=${answer}
+        />
+        <label for=${input_params.id}>${answer}</label>
+      </li>`
+
+      answers_ul.html(answers_html);
+    };
+  }
+  else if (input_params.type == "checkbox") {
+
+    for (i = 0; i < answers.length; i++) {
+      answer = answers[i][0];
+      next_qst_index = answers[i][1].next_qst;
+      prev_qst_index = answers[i][2].prev_qst;
+      prev_qst_index_if_not_answered = answers[i][3].prev_qst_if_not_answered;
+
+      answers_html +=
+      `<li onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})"
+      class="list-group-item">
+        <input type=${input_params.type}
+               name=${input_params.name}
+               id=${input_params.id}
+        />
+        <label for=${input_params.id}>${answer}</label>
+      </li>`
+
+      answers_ul.html(answers_html);
+    };
+  }
+};
+
+
+// Function is called when user click on next button and submit the updated form (update)
+function next() {
+  var next_question = $('.next');
+  var prev_question = $('.prev');
+  var question_div = $('.question');
+  var next_form = $('#edit-cat');
+  var next_url = $(next_form).attr('action');
+  var next_method = $(next_form).attr('method');
+
+  $.ajax({ url: next_url,
+           type: next_method,
+           data: $(next_form).serialize(),
+           success: function(data) {
+            console.log(data)
+           },
+           error: function(data) {
+            alert('Something wrong happended !');
+           }
+  });
+
+  answers_html = "";
+  answered = false;
+
+  next_question.prop("disabled", true);
+
+  question = hash.questions[selected_index_to_next][selected_index_to_next].question
+  question_div.html(`<h1>${question}</h1>`);
+
+  answers = [...hash.questions[selected_index_to_next][selected_index_to_next].answers,
+            hash.questions[selected_index_to_next][selected_index_to_next].tree_answer]
+  answers = answers.filter(function(element){ return element != null })
+
+  input_params = hash.questions[selected_index_to_next][selected_index_to_next].input_params;
+
+  displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
+
+  if (next_qst_index > 0) prev_question.removeClass('hide');
+  if (selected_index_to_next == hash.questions.length - 1) next_question.addClass('hide');
+
+  logsFromNext(selected_index_to_next,selected_index_to_prev,selected_index_to_prev_if_not_answered,answered);
+  // stepperProgression(selected_index_to_next, hash.questions.length);
+};
 
 // Function is called when user click on previous button
 // function prev() {
