@@ -1,4 +1,8 @@
 
+  var next_question = $('.next');
+  var prev_question = $('.prev');
+  var question_div = $('.question');
+  var answers_ul = $('.answers');
   var answers_html = "";
   var answers = [];
   var answer = "";
@@ -19,3 +23,10 @@
   // LAST STEP BUT NOT LAST
   var number_of_prev_click;
 
+
+  var next_form = $('#edit-cat');
+  var next_url = $(next_form).attr('action');
+  var next_method = $(next_form).attr('method');
+
+  var stepper_progression = $('.stepper-progression');
+  var stepper_count = $('.stepper-count');

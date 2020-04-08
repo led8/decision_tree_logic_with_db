@@ -12,7 +12,7 @@ class CatsController < ApplicationController
     @cat = Cat.new(strong_params)
 
     if @cat.save
-      render partial: "cats/partials/ajax_edit"
+      render :edit
     end
   end
 
