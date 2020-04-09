@@ -22,8 +22,19 @@ class CatsController < ApplicationController
 
   def update
     if @cat.update(strong_params)
-      render partial: "cats/partials/ajax_edit"
+      @model_params = {
+        name: @cat.name,
+        size: @cat.size,
+        age: @cat.age,
+        gender: @cat.gender,
+        color: @cat.color,
+        gift: @cat.gift
+      }.to_json
+
+      render partial: "cats/partials/ajax_edit", model_params: @model_params
     end
+
+
   end
 
   private

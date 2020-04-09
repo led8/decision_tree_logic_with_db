@@ -2,7 +2,6 @@
 // = require decision_tree_logic/variables
 // = require decision_tree_logic/questions
 
-
 // Function called when ajax successed first time
 function start() {
   prev_question.addClass('hide');
@@ -17,7 +16,7 @@ function start() {
 
   input_params = hash.questions[start_index][start_index].input_params;
 
-  answers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
+  displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
 };
 start();
 
@@ -30,11 +29,19 @@ function next() {
     data: $(next_form).serialize(),
     success: function(data) {
       logsFromAjax();
+
+      // data_model = $(data).find(".data-model");
+      // var data_json = JSON.parse(data_model.attr('data-model'));
+
+      // localStorage.setItem('params', JSON.stringify(data_json));
+      // console.log(localStorage.getItem('params'));
+
     },
     error: function(data) {
       alert('Something wrong happended !');
     }
   });
+
 
   answers_html = "";
   answered = false;
@@ -50,7 +57,7 @@ function next() {
 
   input_params = hash.questions[selected_index_to_next][selected_index_to_next].input_params;
 
-  answers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
+  displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
 
   logsFromNext(selected_index_to_next,selected_index_to_prev,selected_index_to_prev_if_not_answered,answered);
   stepperProgression(selected_index_to_next, hash.questions.length);
@@ -61,9 +68,9 @@ function prev() {
   answers_html = "";
 
   if (answered) {
-     prevIfAnswered();
+     ifAnswered();
   } else {
-    prevIfNotAnswered();
+    ifNotAnswered();
   }
 
   if (prev_qst_index == null) prev_question.addClass('hide');
@@ -72,7 +79,7 @@ function prev() {
 };
 
 // Function called when the user answered (answer selected)
-function prevIfAnswered() {
+function ifAnswered() {
   question = hash.questions[selected_index_to_prev][selected_index_to_prev].question;
   question_div.html(`<h1>${question}</h1>`);
 
@@ -82,11 +89,11 @@ function prevIfAnswered() {
 
   input_params = hash.questions[selected_index_to_prev][selected_index_to_prev].input_params;
 
-  answers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
+  displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params);
 };
 
 // Function is called when the user do not answer (no answer selected)
-// function prevIfNotAnswered() {
+// function ifNotAnswered() {
 //   number_of_prev_click ++
 
 //   console.log('number of click on prev button: ' + number_of_prev_click)
@@ -114,17 +121,19 @@ function prevIfAnswered() {
 // };
 
 // Function called when user go next or go back
-function answers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params) {
+function displayAnswers(answer,next_qst_index,prev_qst_index,prev_qst_index_if_not_answered,input_params) {
   if (input_params.type == "select") {
     next_qst_index = answers[0][1].next_qst;
     prev_qst_index = answers[0][2].prev_qst;
     prev_qst_index_if_not_answered = answers[0][3].prev_qst_if_not_answered;
 
-    answers_ul.html(`<li><select name=${input_params.name}
-                                 id=${input_params.id}
-                                 onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})">
-                        </select>
-                    </li>`);
+    answers_ul.html(
+      `<li>
+        <select name=${input_params.name}
+                id=${input_params.id}
+                onchange="selectAnswer(${next_qst_index},${prev_qst_index},${prev_qst_index_if_not_answered})">
+        </select>
+      </li>`);
 
     for (i = 0; i < answers.length; i++) {
       answer = answers[i][0];
@@ -234,3 +243,5 @@ function stepperProgression(current_question, questions_length) {
   stepper_progression.css('width', `${width}%`);
   stepper_count.html(`${10*Math.floor(width/10)}%`)
 }
+
+
